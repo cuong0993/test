@@ -17,9 +17,9 @@ RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | a
 
 RUN java -version
 
-ENV GODOT_VERSION "3.2.3"
+ENV GODOT_VERSION "3.3"
 ENV ANDROID_COMPILE_SDK 29
-ENV ANDROID_BUILD_TOOLS 29.0.3
+ENV ANDROID_BUILD_TOOLS 30.0.1
 
 ENV RELEASE_NAME "stable"
 
@@ -45,13 +45,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 && wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip \
  && unzip -d android-sdk commandlinetools-linux-6858069_latest.zip \
  && mv android-sdk /opt/android-sdk \
-&& echo y | /opt/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android-sdk/cmdline-tools "platform-tools" "platforms;android-$ANDROID_COMPILE_SDK" "build-tools;${ANDROID_BUILD_TOOLS}" \
-&& echo y | /opt/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android-sdk/cmdline-tools --licenses \
+&& yes | /opt/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android-sdk/cmdline-tools --licenses \
+&& /opt/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/opt/android-sdk/cmdline-tools "platform-tools" "platforms;android-$ANDROID_COMPILE_SDK" "build-tools;${ANDROID_BUILD_TOOLS}" \
 && apt-get remove wget unzip -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && apt autoremove -y
 
 RUN godot -e -v -q \
-    && echo 'export/android/adb = "/opt/android-sdk/cmdline-tools/platform-tools/adb"' >> ./root/.config/godot/editor_settings-3.tres \
-    && echo 'export/android/jarsigner = "/usr/bin/jarsigner"' >> ./root/.config/godot/editor_settings-3.tres \
-    && echo 'export/android/custom_build_sdk_path = "/opt/android-sdk/cmdline-tools"' >> ./root/.config/godot/editor_settings-3.tres
+    && echo 'export/android/android_sdk_path = "/opt/android-sdk/cmdline-tools"' >> ./root/.config/godot/editor_settings-3.tres
