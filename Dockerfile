@@ -17,7 +17,7 @@ RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | a
 
 RUN java -version
 
-ENV GODOT_VERSION "3.3.1"
+ENV GODOT_VERSION "3.3.2"
 ENV ANDROID_COMPILE_SDK 29
 ENV ANDROID_BUILD_TOOLS 30.0.3
 
